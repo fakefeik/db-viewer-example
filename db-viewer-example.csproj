@@ -9,7 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GroboContainer" Version="1.2.62" />
+    <PackageReference Include="GroBuf" Version="1.9.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.14" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.20" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.8" />
     <PackageReference Include="SkbKontur.DbViewer.Cql" Version="1.5.8" />
     <PackageReference Include="SkbKontur.DbViewer.EntityFramework" Version="1.5.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

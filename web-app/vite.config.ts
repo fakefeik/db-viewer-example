@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/db-viewer": "http://localhost:5000",
+      "/db-viewer": "http://localhost:5119",
     },
   },
 })
