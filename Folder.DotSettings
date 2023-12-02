@@ -1,0 +1,319 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1A2D8FC6BB7F3942BF35A0968D4CDB3C/@KeyIndexDefined">False</s:Boolean>
+	
+	
+	
+	
+	
+	
+	
+	
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/Shortcut/@EntryValue">db-custom</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4B0B03AE93342146863525C999B7D23B/Text/@EntryValue">using System.Reflection;
+using GroBuf;
+using GroBuf.DataMembersExtracters;
+using SkbKontur.DbViewer.Configuration;
+
+namespace DbViewerExample.EntityFramework;
+
+public class CustomPropertyConfigurationProvider : ICustomPropertyConfigurationProvider
+{
+    private static readonly ISerializer Serializer = new Serializer(new AllPropertiesExtractor());
+
+    public CustomPropertyConfiguration? TryGetConfiguration(object @object, PropertyInfo propertyInfo)
+    {
+        return TryGetConfiguration(propertyInfo);
+    }
+
+    public CustomPropertyConfiguration? TryGetConfiguration(PropertyInfo propertyInfo)
+    {
+        var serializedAttribute = propertyInfo.GetCustomAttribute&lt;SerializedAttribute&gt;();
+        if (serializedAttribute == null)
+            return null;
+
+        return new CustomPropertyConfiguration
+        {
+            ResolvedType = serializedAttribute.Type,
+            StoredToApi = @object =&gt; Serializer.Deserialize(serializedAttribute.Type, (byte[]?)@object),
+            ApiToStored = @object =&gt; Serializer.Serialize(serializedAttribute.Type, @object)
+        };
+    }
+
+    public CustomPropertyConfiguration? TryGetConfiguration(Type propertyType)
+    {
+        return null;
+    }
+}</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/Shortcut/@EntryValue">db-sql-ctx</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=629774597C4C684C813AADE8BC18B3AB/Text/@EntryValue">using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace DbViewerExample.EntityFramework;
+
+public class EntityFrameworkDbContext : DbContext
+{
+    public const string ConnectionString = "Host=localhost;Database=my_db;Username=postgres;Password=postgres";
+
+    public static readonly Type[] EntityTypes = {typeof(TestTable)};
+
+    public DbSet&lt;TestTable&gt; Tests { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseNpgsql(ConnectionString);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        foreach (var type in EntityTypes)
+        {
+            var entity = modelBuilder.Entity(type);
+
+            var keyProperties = ExtractPropertiesWithAttribute&lt;IdentityAttribute&gt;(entity);
+            entity.HasKey(keyProperties.Select(x =&gt; x.Name).ToArray());
+
+
+            var indexedProperties = ExtractPropertiesWithAttribute&lt;IndexedAttribute&gt;(entity);
+            if (indexedProperties.Any())
+                entity.HasIndex(indexedProperties.Select(x =&gt; x.Name).ToArray());
+        }
+    }
+
+    private static PropertyInfo[] ExtractPropertiesWithAttribute&lt;TAttribute&gt;(EntityTypeBuilder entityTypeBuilder)
+        where TAttribute : Attribute
+    {
+        return entityTypeBuilder.Metadata.ClrType
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(x =&gt; x.CanRead &amp;&amp; x.CanWrite &amp;&amp; x.GetCustomAttributes&lt;TAttribute&gt;().Any())
+            .ToArray();
+    }
+}</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/Shortcut/@EntryValue">db-sql-schema</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8D67B55CAF652041853CD6364DD08131/Text/@EntryValue">using SkbKontur.DbViewer.Configuration;
+using SkbKontur.DbViewer.Connector;
+using SkbKontur.DbViewer.DataTypes;
+using SkbKontur.DbViewer.EntityFramework;
+using SkbKontur.DbViewer.Schemas;
+
+namespace DbViewerExample.EntityFramework;
+
+public class PostgresSchemaConfiguration : ISchemaConfiguration
+{
+    public PostgresSchemaConfiguration(EntityFrameworkDbConnectorFactory connectorFactory)
+    {
+        ConnectorsFactory = connectorFactory;
+        PropertyDescriptionBuilder =
+            new EntityFrameworkPropertyDescriptionBuilder&lt;IdentityAttribute, IndexedAttribute&gt;();
+    }
+
+    public SchemaDescription Description =&gt; new()
+    {
+        AllowReadAll = true,
+        CountLimit = 50_000,
+        CountLimitForSuperUser = 1_000_000,
+        DownloadLimit = 50_000,
+        DownloadLimitForSuperUser = 1_000_000,
+        SchemaName = "Postgres Objects",
+        AllowDelete = true,
+        AllowEdit = true,
+        AllowSort = true
+    };
+
+    public TypeDescription[] Types =&gt; EntityFrameworkDbContext.EntityTypes.ToTypeDescriptions();
+
+    public IDbConnectorFactory ConnectorsFactory { get; }
+    public IPropertyDescriptionBuilder PropertyDescriptionBuilder { get; }
+}</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/Reformat/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/Shortcut/@EntryValue">db-api</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/Text/@EntryValue">using Microsoft.AspNetCore.Mvc;
+using SkbKontur.DbViewer;
+using SkbKontur.DbViewer.Configuration;
+using SkbKontur.DbViewer.DataTypes;
+
+namespace DbViewerExample.Controllers;
+
+[ApiController]
+[Route("db-viewer")]
+public class DbViewerApiController : ControllerBase
+{
+    private readonly DbViewerApi _impl;
+
+    public DbViewerApiController(SchemaRegistryProvider schemaRegistryProvider)
+    {
+        _impl = new DbViewerApi(schemaRegistryProvider.GetSchemaRegistry());
+    }
+
+    [HttpGet("names")]
+    public ObjectIdentifier[] GetNames()
+    {
+        return _impl.GetNames();
+    }
+
+    [HttpGet("{objectIdentifier}/meta")]
+    public ObjectDescription GetMeta(string objectIdentifier)
+    {
+        return _impl.GetMeta(objectIdentifier);
+    }
+
+    [HttpPost("{objectIdentifier}/search")]
+    public Task&lt;SearchResult&gt; SearchObjects(string objectIdentifier, [FromBody] ObjectSearchRequest query)
+    {
+        return _impl.SearchObjects(objectIdentifier, query, IsSuperUser());
+    }
+
+    [HttpPost("{objectIdentifier}/count")]
+    public Task&lt;CountResult&gt; CountObjects(string objectIdentifier, [FromBody] ObjectSearchRequest query)
+    {
+        return _impl.CountObjects(objectIdentifier, query, IsSuperUser());
+    }
+
+    [HttpGet("{objectIdentifier}/download/{queryString}")]
+    public async Task&lt;IActionResult&gt; DownloadObjects(string objectIdentifier, string queryString)
+    {
+        var fileInfo = await _impl.DownloadObjects(objectIdentifier, queryString, IsSuperUser())
+            .ConfigureAwait(false);
+        return File(fileInfo.Content, fileInfo.ContentType, fileInfo.Name);
+    }
+
+    [HttpPost("{objectIdentifier}/details")]
+    public Task&lt;ObjectDetails&gt; ReadObject(string objectIdentifier, [FromBody] ObjectReadRequest query)
+    {
+        return _impl.ReadObject(objectIdentifier, query);
+    }
+
+    [HttpDelete("{objectIdentifier}/delete")]
+    public Task DeleteObject(string objectIdentifier, [FromBody] ObjectReadRequest query)
+    {
+        return _impl.DeleteObject(objectIdentifier, query, IsSuperUser());
+    }
+
+    [HttpPost("{objectIdentifier}/update")]
+    public Task UpdateObject(string objectIdentifier, [FromBody] ObjectUpdateRequest query)
+    {
+        return _impl.UpdateObject(objectIdentifier, query, IsSuperUser());
+    }
+
+    private bool IsSuperUser()
+    {
+        return HttpContext.Request.Cookies.ContainsKey("isSuperUser");
+    }
+}</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A50886478518994FA9D9F4CD745ABA84/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/Shortcut/@EntryValue">db-sql-ctx-factory</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D85B90515C96FC4ABB046F90F748C64F/Text/@EntryValue">using SkbKontur.DbViewer.Connector;
+using SkbKontur.DbViewer.EntityFramework;
+
+namespace DbViewerExample.EntityFramework;
+
+public class EntityFrameworkDbConnectorFactory : IDbConnectorFactory
+{
+    private readonly Func&lt;EntityFrameworkDbContext&gt; _createContext;
+
+    public EntityFrameworkDbConnectorFactory(Func&lt;EntityFrameworkDbContext&gt; createContext)
+    {
+        _createContext = createContext;
+    }
+
+    public IDbConnector CreateConnector&lt;T&gt;() where T : class
+    {
+        return new EntityFrameworkDbConnector&lt;T&gt;(_createContext);
+    }
+}</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/Shortcut/@EntryValue">db-table</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DA98B1A24A553D47AE5D09A266B5BE3E/Text/@EntryValue">using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DbViewerExample.EntityFramework;
+
+public class IdentityAttribute : Attribute
+{
+}
+
+public class IndexedAttribute : Attribute
+{
+}
+
+public class SerializedAttribute : Attribute
+{
+    public SerializedAttribute(Type type)
+    {
+        Type = type;
+    }
+
+    public Type Type { get; }
+}
+
+public class TestTable
+{
+    [Identity] public int Id { get; set; }
+
+    [Identity] public string CompositeKey { get; set; }
+
+    [Indexed] public bool Boolean { get; set; }
+
+    [Indexed] public int Integer { get; set; }
+
+    [Indexed] public string String { get; set; }
+
+    [Indexed] public DateTime DateTime { get; set; }
+
+    [Indexed] public DateTimeOffset DateTimeOffset { get; set; }
+
+    [Column(TypeName = "jsonb")] public Customer Customer { get; set; }
+
+    [Serialized(typeof(Customer))] public byte[] CustomerSerialized { get; set; }
+}
+
+public class Customer
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Order[] Orders { get; set; }
+}
+
+public class Order
+{
+    public decimal Price { get; set; }
+    public string ShippingAddress { get; set; }
+}</s:String></wpf:ResourceDictionary>

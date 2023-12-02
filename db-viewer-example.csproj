@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="GroboContainer" Version="1.2.62" />
     <PackageReference Include="GroBuf" Version="1.9.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.14" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.20" />
